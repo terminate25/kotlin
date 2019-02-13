@@ -1,0 +1,71 @@
+<resources>
+    <!-- to support your app multi language-->
+    <string name="app_name">CoordinatorSensor</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- ILogin screen -->
+    <string name="title_app">CONNECTED SENSOR</string>
+    <string name="user_name">UserName</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="app_version">App version:</string>
+    <string name="library_version">Library version:</string>
+    <string name="title">Connected Sensor</string>
+    <string name="invalid_username">Please type User Name</string>
+    <string name="invalid_password">Please type Password</string>
+    <string name="login_failed">Login failed</string>
+    <string name="invalid_server">Invalid server url</string>
+    <string name="invalid_user_password">Invalid user or password</string>
+
+    <!-- Start screen -->
+    <string name="start">Start</string>
+    <string name="content_send_unsendmessage">Do you want to send message?</string>
+    <string name="bt_connected">Bluetooth connected</string>
+    <string name="keep">Keep</string>
+    <string name="send">Send</string>
+    <string name="delete">Delete</string>
+    <string name="send_message">Send Message</string>
+    <string name="cancel">Cancel</string>
+    <string name="reconnect">Reconnect</string>
+
+    <!-- Setting screen -->
+    <string name="server_retry">Server Retry</string>
+    <string name="upload_interval">Upload Interval</string>
+    <string name="server_url">Server URL</string>
+    <string name="log_upload">Log Upload</string>
+    <string name="log_upload_url">Log Upload URL</string>
+    <string name="upload_user">Upload User</string>
+    <string name="upload_password">Upload Password</string>
+    <string name="bt_mac_address">BT Mac Address</string>
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
+    <string name="upload_condition_content">Upload interval must be equal 1 to 60</string>
+    <string name="retry_condition_content">Retry interval must be equal 1 to 180</string>
+    <string name="server_url_condition_content">Please input Server URL</string>
+    <string name="upload_url_condition_content">Please input Log Upload URL</string>
+
+    <!-- Running screen -->
+    <string name="send_unsend_data">Send Unsend Data</string>
+    <string name="upload_log">Upload Log</string>
+    <string name="upload_failed">Upload failed</string>
+    <string name="send_failed">Send data failed</string>
+    <string name="compress_log">Compression in Progress...</string>
+    <string name="bt_connect_fail">Bluetooth can not connect</string>
+    <string name="bt_disconnected">Bluetooth disconnected</string>
+    <string name="bt_retry">Bluetooth connection retry</string>
+
+    <!-- Stop screen -->
+    <string name="restart">Restart</string>
+
+    <!-- Dialog screen -->
+    <string name="normal">Normal</string>
+    <string name="hard_braking">Hard braking</string>
+    <string name="sudden_steering">Sudden steering</string>
+    <string name="hard_accleration">Hard acceleration</string>
+    <string name="event">Event</string>
+    <string name="teaching">Teaching</string>
+    <string name="ok">OK</string>
+
+
+
+</resources>
