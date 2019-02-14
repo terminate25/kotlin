@@ -47,33 +47,10 @@ class MainActivity : AppCompatActivity() {
     private fun initLoginCallBack() {
         mLoginBtn!!.setOnClickListener{
             // Do ILogin
-            Login.
+            val mLogin = Login.getInstance()
+            mLogin.doLogin(mUserNameText, mPassword)
         }
     }
-
-    private fun doLogin() {
-        mUserNameText!!.validate({s -> s.isValidText()}, MessageLogin.UserNameEmpty)
-        mPassword!!.validate({s -> s.isValidText()}, MessageLogin.PasswordEmpty)
-    }
-
-    private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-        this.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-                afterTextChanged.invoke(s.toString())
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-        })
-    }
-
-    private fun EditText.validate(validator: (String) -> Boolean, message: String) {
-        this.afterTextChanged {
-            this.error = if (validator(it)) null else message
-        }
-        this.error = if (validator(this.text.toString())) null else message
-    }
-
-    private fun String.isValidText() : Boolean = this.isNotEmpty()
     //Auto ILogin
 
     //Init
