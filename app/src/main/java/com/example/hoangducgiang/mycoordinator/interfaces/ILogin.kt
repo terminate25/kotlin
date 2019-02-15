@@ -1,8 +1,7 @@
 package com.example.hoangducgiang.mycoordinator.interfaces
-
-import android.text.Editable
+import android.os.Handler
 import android.widget.EditText
 
 interface ILogin {
-    fun doLogin(userName: EditText?, password: EditText?)
+    fun doLogin(handler: Handler?, userName: EditText?, password: EditText?)
 }

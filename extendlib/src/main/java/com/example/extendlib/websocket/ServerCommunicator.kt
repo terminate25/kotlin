@@ -1,21 +1,29 @@
 package com.example.extendlib.websocket
 
 import android.os.Handler
+import android.util.Log
 import com.example.extendlib.websocket.enums.SocketIdEnum
-import com.example.extendlib.websocket.interfaces.IOnLoginCompleted
 import com.example.extendlib.websocket.interfaces.IWebSocketListener
+import com.example.extendlib.websocket.util.SendMessageEventCode.Companion.SEND_MESSAGE_EVENT_CODE_ERROR
+import com.example.extendlib.websocket.util.SendMessageEventCode.Companion.SEND_MESSAGE_EVENT_CODE_NOT_OPEN
+import com.example.extendlib.websocket.util.SendMessageEventCode.Companion.SEND_MESSAGE_EVENT_CODE_OPENED
+import com.example.extendlib.websocket.util.SendMessageEventCode.Companion.SEND_MESSAGE_EVENT_CODE_SUCCESS
+import com.example.extendlib.websocket.util.SendMessageEventCode.Companion.SEND_MESSAGE_EVENT_CODE_TIME_OUT
 import com.example.extendlib.websocket.util.ServerDefault
 import org.java_websocket.WebSocket
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft
 import org.java_websocket.handshake.ServerHandshake
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
+import java.lang.NumberFormatException
 import java.net.URI
 import java.net.URISyntaxException
+import java.util.*
 import java.util.concurrent.TimeoutException
-import kotlin.math.log
+import kotlin.collections.ArrayList
 
 class ServerCommunicator private constructor() : IWebSocketListener{
     /**
@@ -46,46 +54,54 @@ class ServerCommunicator private constructor() : IWebSocketListener{
     * DECLARATION
     * */
     var serverAddress : String = ServerDefault.ServerAddress
-        set(value) {
-            serverAddress = value
-        }
+//        set(value) {
+//            serverAddress = value
+//        }
     var serverPort : Int = ServerDefault.ServerPort
-        set(value) {
-            serverPort = value
-        }
+//        set(value) {
+//            serverPort = value
+//        }
     var serverTimeout : Long = ServerDefault.ServerTimeout
-        set(value) {
-            serverTimeout = value
-        }
+//        set(value) {
+//            serverTimeout = value
+//        }
     var serverReopenDelay : Int = ServerDefault.ServerReopenDelay
-        set(value) {
-            serverReopenDelay = value
-        }
+//        set(value) {
+//            serverReopenDelay = value
+//        }
 
     var serverSendDataInterval : Int = ServerDefault.ServerSendDataInterval
-        set(value) {
-        serverSendDataInterval = value
-    }
+//        set(value) {
+//        serverSendDataInterval = value
+//    }
 
+    private var onWorking: Boolean = false
+    private var accessToken : String? = null
+    private var eventSendMessage : IOnSendMessageListener? = null
+    private var messageSocket : MessageWebSocket? = null
+    private val messageQueue  = Collections.synchronizedList(ArrayList<JSONObject>())
     /**
     * SETTER
     * */
 
-//    private fun setServerAddress(value: String) {
+//    public fun setServerAddress(value: String) {
 //        this.serverAddress = value
 //    }
 
-//    private fun setServerPort(value: Int) {
+//    public fun setServerPort(value: Int) {
 //        this.serverPort = value
 //    }
 //
-//    private fun setServerReopenDelay(value: Int) {
+//    public fun setServerReopenDelay(value: Int) {
 //        this.serverReopenDelay = value
 //    }
 //
-//    private fun setSendDataInterval(value: Int) {
+//    public fun setSendDataInterval(value: Int) {
 //        this.serverSendDataInterval = value
 //    }
+    private fun setEventSendMessage(eventSendMessage: IOnSendMessageListener) {
+        this.eventSendMessage = eventSendMessage
+    }
 
 
     /**
@@ -93,21 +109,137 @@ class ServerCommunicator private constructor() : IWebSocketListener{
     * */
 
 
-    override fun onError(socketId: SocketIdEnum?, ex: Exception) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
+    /**
+     * METHODS
+     */
+
+//    private fun openSocket() {
+//        this.onWorking = true
+//        this.openMessageSocket()
+//    }
+//
+//    private fun storeMessage() {
+//        var temp : MutableList<JSONObject>
+//        synchronized(messageQueue) {
+//            temp = ArrayList(messageQueue)
+//            messageQueue.clear()
+//        }
+//        for (json in temp) {
+//            db.
+//        }
+//        temp.clear()
+//    }
+//
+//    private fun closeMessageSocket() {
+//        this.storeMessage()
+//        if (this.messageSocket != null) {
+//            this.messageSocket!!.setListener(SocketIdEnum.MESSAGE, null)
+//            this.messageSocket!!.close()
+//        }
+//    }
+//
+//    private fun openMessageSocket() {
+//        if (this.accessToken == null) {
+//            if (this.eventSendMessage != null) {
+//                this.eventSendMessage!!.onSendMessage(SEND_MESSAGE_EVENT_CODE_NOT_OPEN, Exception("Not Login yet"))
+//            }
+//        }
+//        val headers = HashMap<String, String>()
+//        headers.put("Sec-WebSocket-Protocol", this.accessToken!!)
+//        try {
+//            closeMessageSocket()
+//        }
+//    }
+    /**
+     * IMPLEMENTS
+     */
+    override fun onError(socketId: SocketIdEnum?, ex: Exception) {
+//        when (socketId) {
+//            SocketIdEnum.LOGIN -> if (this.eventLoginCompleted != null) {
+//                this.eventLoginCompleted!!.onCompleted(false, 1, ex.message)
+//            }
+//            SocketIdEnum.MESSAGE -> {
+//                // store message and close socket
+//                closeMessageSocket()
+//
+//                if (ex is TimeoutException) {
+//                    if (eventSendMessage != null) {
+//                        eventSendMessage!!.onSendMessage(SEND_MESSAGE_EVENT_CODE_TIME_OUT, null)
+//                    }
+//                } else {
+//                    if (eventSendMessage != null) {
+//                        eventSendMessage!!.onSendMessage(SEND_MESSAGE_EVENT_CODE_ERROR, ex)
+//                    }
+//                }
+//
+//                // Reopen
+//                openSocketDelay()
+//            }
+//        }
+        var a  = ""
     }
 
+
     override fun onMessage(socketId: SocketIdEnum?, message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        when (socketId) {
+//            SocketIdEnum.LOGIN -> try {
+//                val json = JSONObject(message)
+//                if (json.getBoolean("success")) {
+//                    this.access_token = json.getString("access_token")
+//                    // Tell main thread to create message socket - comment out 20181115 user open socket by them self
+//                    //                        Message messageToHandler = mHandler.obtainMessage(HANDLE_WHAT_OPEN_SOCKET, access_token);
+//                    //                        messageToHandler.sendToTarget();
+//                    this.eventLoginCompleted!!.onCompleted(true, 0, null)
+//                } else {
+//                    this.eventLoginCompleted!!.onCompleted(false, 2, "Wrong user name or password.")
+//                }
+//            } catch (e: JSONException) {
+//                this.eventLoginCompleted!!.onCompleted(false, 0, e.message)
+//                e.printStackTrace()
+//            }
+//
+//            SocketIdEnum.MESSAGE -> {
+//                if (eventSendMessage != null) {
+//                    eventSendMessage!!.onSendMessage(SEND_MESSAGE_EVENT_CODE_SUCCESS, null)
+//                }
+//
+//
+//                // remove sent message
+//                //int count = SEND_LOT;
+//                try {
+//                    val count = Integer.parseInt(message)
+//                    synchronized(messageQueue) {
+//                        for (i in 0 until count) {
+//                            if (messageQueue.size > 0) {
+//                                messageQueue.removeAt(0)
+//                            }
+//                        }
+//                    }
+//                } catch (ignored: NumberFormatException) {
+//
+//                }
+//
+//            }
+//        }
+        var b = ""
     }
 
     override fun onOpen(socketId: SocketIdEnum?, serverHandshakeData: ServerHandshake) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (socketId == SocketIdEnum.MESSAGE && eventSendMessage != null) {
+            eventSendMessage!!.onSendMessage(SEND_MESSAGE_EVENT_CODE_OPENED, Exception())
+        }
     }
 
     override fun onClose(socketId: SocketIdEnum?, code: Int, reason: String, remote: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        when (socketId) {
+//            SocketIdEnum.LOGIN -> {
+//            }
+//            SocketIdEnum.MESSAGE ->
+//                // Store unsent message
+//                this.storeMessages()
+//        }
+        var c = ""
     }
 
 
@@ -118,6 +250,11 @@ class ServerCommunicator private constructor() : IWebSocketListener{
     }
 
     fun login(userName: String, password: String, onCompleted: IOnLoginCompleted) {
+        Log.e("UserName is ", userName)
+        Log.e("Password is ", password)
+        Log.e("ServerURL ", this.serverAddress)
+
+
         var loginSocket : LoginWebSocket? = null
         try {
             val uri : String = "ws://" + this.serverAddress + ":" + serverPort + "/login"
@@ -234,7 +371,7 @@ class ServerCommunicator private constructor() : IWebSocketListener{
         fun login(userName: String, password: String, timeOut: Long) {
             this.userName = userName
             this.password = password
-            this.timeout = timeout
+            this.timeout = timeOut
 
             this.setTimeout(timeOut)
             this.connect()
@@ -257,5 +394,26 @@ class ServerCommunicator private constructor() : IWebSocketListener{
             }
             super.onOpen(handshakedata)
         }
+    }
+
+    private inner class MessageWebSocket constructor(serverURI: URI, draft: Draft, headers : HashMap<String, String>, connectionTimeout: Int)
+        : CommonWebSocket(serverURI, draft, headers, connectionTimeout) {
+        fun message(message : JSONArray, timeOut: Long) {
+            if (!isProcessing && readyState == WebSocket.READYSTATE.OPEN) {
+                this.setTimeout(timeOut)
+                this.send(message.toString())
+            }
+        }
+    }
+    /**
+     * INNER INTERFACE
+     *
+     */
+    interface IOnLoginCompleted {
+        fun onCompleted(success: Boolean, errorCode: Int, errorMessage: String)
+    }
+
+    interface IOnSendMessageListener {
+        fun onSendMessage(code: Int, ex: Exception)
     }
 }

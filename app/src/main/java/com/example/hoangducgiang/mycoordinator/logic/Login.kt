@@ -1,12 +1,12 @@
 package com.example.hoangducgiang.mycoordinator.logic
 
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import com.example.extendlib.websocket.ServerCommunicator
 import com.example.hoangducgiang.mycoordinator.interfaces.ILogin
 import com.example.hoangducgiang.mycoordinator.utils.MessageLogin
-
 /**
  * Library
  */
@@ -28,21 +28,18 @@ class Login private constructor(): ILogin {
             return Holder.INSTANCE
         }
     }
-    /*
-    * END SINGLETON
-    * */
 
-    override fun doLogin(userName: EditText?, password: EditText?) {
+    override fun doLogin(handler: Handler?, userName: EditText?, password: EditText?) {
         userName!!.validate({s -> s.isValidText()}, MessageLogin.UserNameEmpty)
         password!!.validate({s -> s.isValidText()}, MessageLogin.PasswordEmpty)
 
-        this.login(userName.toString(), password.toString())
+        this.login(handler, userName.text.toString(), password.text.toString())
 
     }
 
     private val com = ServerCommunicator.getInstance()
 
-    private fun login(userName: String, password: String) {
+    private fun login(handler: Handler?, userName: String, password: String) {
         //To DO get URL and Port from Setting
         var serverAddress : String = "192.168.0.206"
         var serverPort : Int = 5000
@@ -52,14 +49,29 @@ class Login private constructor(): ILogin {
         com.serverPort = serverPort
         com.serverTimeout = serverTimeout
 
-        com.login(userName, password) { success, errorCode, errorMessage ->
-            if(success) {
-                //TO DO
-            }
-            else{
+        com.login(userName, password, object : ServerCommunicator.IOnLoginCompleted {
+            override fun onCompleted(success: Boolean, errorCode: Int, errorMessage: String) {
+                if (!success) {
+                    val message =
+                        handler!!.obtainMessage(1, String.format("Success=%s, error=%s", success, errorMessage))
+                    message.sendToTarget()
+                }
+                else {
+                    when (errorCode) {
+                        1 -> {
+                            val message = handler!!.obtainMessage(2, String.format("%s", errorMessage))
+                            message.sendToTarget()
+                        }
+                        2 -> {
+                            val message =
+                                handler!!.obtainMessage(3, String.format("Success=%s, error=%s", success, errorMessage))
+                            message.sendToTarget()
+                        }
+                    }
+                }
 
             }
-        }
+        })
     }
 
     private fun configTimeServer() {
